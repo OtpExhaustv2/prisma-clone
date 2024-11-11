@@ -32,13 +32,22 @@ export const parse = (tokens: TToken[]): TModel[] => {
 			case 'ATTRIBUTE':
 				if (!currentField)
 					throw new Error('Attribute outside of field context!');
-				const [attributeName, attributeArgs] = token.value
-					.match(/@(\w+)(\(([^)]+)\))?/)!
-					.slice(1);
-				currentField.attributes.push({
-					name: attributeName,
-					args: attributeArgs ? attributeArgs.split(',') : [],
-				});
+				const attributeMatch = token.value.match(/^@(\w+)(?:\((.*)\))?$/);
+
+				if (attributeMatch) {
+					const attributeName = attributeMatch[1];
+					const rawArgs = attributeMatch[2];
+
+					const attributeArgs = rawArgs
+						? rawArgs.split(',').map((arg) => arg.trim())
+						: [];
+
+					currentField.attributes.push({
+						name: attributeName,
+						args: attributeArgs,
+					});
+				}
+
 				break;
 			case 'BRACE_OPEN':
 				break;

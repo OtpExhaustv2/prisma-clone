@@ -1,8 +1,10 @@
 import 'dotenv/config';
 import express from 'express';
 import { db } from './features/database/index.js';
+import { generateSQL } from './features/schema-parser/generateSQL.js';
 import { parse } from './features/schema-parser/parse.js';
 import { tokenize } from './features/schema-parser/tokenize.js';
+import { validateSchema } from './features/schema-parser/validateSchema.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -67,7 +69,13 @@ model Post {
 
 	const result = parse(tokens);
 
-	res.json(result);
+	try {
+		validateSchema(result);
+
+		res.json(generateSQL(result));
+	} catch (error) {
+		res.json({ error: error.message });
+	}
 });
 
 app.listen(port, () => {
