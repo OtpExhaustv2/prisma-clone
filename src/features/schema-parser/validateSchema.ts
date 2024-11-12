@@ -12,7 +12,11 @@ export const validateSchema = (models: TModel[]): void => {
 		}
 
 		for (const field of model.fields) {
-			if (!['Int', 'String', 'Boolean', ...modelNames].includes(field.type)) {
+			if (
+				!['Int', 'String', 'Boolean', 'DateTime', ...modelNames].includes(
+					field.type
+				)
+			) {
 				throw new Error(
 					`Model "${model.name}" has an invalid field type: "${field.type}"`
 				);

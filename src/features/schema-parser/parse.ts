@@ -16,14 +16,15 @@ export const parse = (tokens: TToken[]): TModel[] => {
 
 			case 'FIELD':
 				if (!currentModel) throw new Error('Field outside of model context!');
-				const [fieldName, fieldType, isArray] = token.value
-					.match(/(\w+)\s+(\w+)(\[\])?/)!
+				const [fieldName, fieldType, isArray, isNullable] = token.value
+					.match(/(\w+)\s+(\w+)(\[\])?(\?)?/)!
 					.slice(1);
 
 				currentField = {
 					name: fieldName,
 					type: fieldType,
 					isArray: !!isArray,
+					isNullable: !!isNullable,
 					attributes: [],
 				};
 				currentModel.fields.push(currentField);

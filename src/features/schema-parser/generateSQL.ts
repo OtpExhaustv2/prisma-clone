@@ -9,10 +9,12 @@ export const generateSQL = (models: TModel[]): string => {
 			.map((field) => {
 				const isId = field.attributes.some((attr) => attr.name === 'id');
 				if (isId) {
-					return `${field.name} SERIAL PRIMARY KEY `;
+					return `\t${field.name} SERIAL PRIMARY KEY`;
 				}
 
-				let fieldDef = `${field.name} ${getSQLType(field)}`;
+				let fieldDef = `\t${field.name} ${getSQLType(field)} ${
+					field.isNullable ? '' : 'NOT NULL'
+				}`;
 
 				if (field.attributes.some((attr) => attr.name === 'unique')) {
 					fieldDef += ' UNIQUE';
@@ -34,14 +36,14 @@ export const generateSQL = (models: TModel[]): string => {
 			.map((field) => generateForeignKeyConstraint(model, field));
 
 		tableDefinition.push(
-			fieldsDefinition.concat(relationConstraints).join(', ')
+			fieldsDefinition.concat(relationConstraints).join(',\n')
 		);
 		tableDefinition.push(');');
 
-		return tableDefinition.join('');
+		return tableDefinition.join('\n');
 	});
 
-	return sqlStatements.join('');
+	return sqlStatements.join('\n\n');
 };
 
 export const isRelationReferenceOnly = (field: TField): boolean => {
@@ -75,7 +77,7 @@ export const generateForeignKeyConstraint = (
 
 	const relationArgs = retrieveFormattedArgs(relationAttr.args);
 
-	return `FOREIGN KEY (${relationArgs.fields}) REFERENCES ${field.type}(${relationArgs.references})`;
+	return `\tFOREIGN KEY (${relationArgs.fields}) REFERENCES ${field.type}(${relationArgs.references})`;
 };
 
 export const getSQLType = (field: TField): string => {

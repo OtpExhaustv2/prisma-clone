@@ -5,6 +5,7 @@ type TTokenType =
 	| 'FIELD'
 	| 'ATTRIBUTE'
 	| 'WHITESPACE';
+
 type TToken = { type: TTokenType; value: string };
 
 type TAttribute = {
@@ -16,6 +17,7 @@ type TField = {
 	name: string;
 	type: string;
 	isArray: boolean;
+	isNullable: boolean;
 	attributes: TAttribute[];
 };
 

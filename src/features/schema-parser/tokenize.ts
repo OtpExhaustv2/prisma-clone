@@ -5,7 +5,7 @@ export const tokenize = (schema: string): TToken[] => {
 		[/^model\s+([A-Za-z_][A-Za-z0-9_]*)/, 'MODEL'], // Match "model ModelName"
 		[/^\{\s*/, 'BRACE_OPEN'], // Match opening brace '{'
 		[/^\}\s*/, 'BRACE_CLOSE'], // Match closing brace '}'
-		[/^(\w+)\s+(\w+)(\[\])?/, 'FIELD'], // Match "fieldName fieldType" with optional array notation
+		[/^(\w+)\s+(\w+)(\[\])?(\?)?/, 'FIELD'], // Match "fieldName fieldType" with optional array notation
 		[/^@(\w+)(\(([^()]*|\([^()]*\))*\))?/, 'ATTRIBUTE'], // Match "@attribute(args)" with arguments enclosed in parentheses
 	];
 
